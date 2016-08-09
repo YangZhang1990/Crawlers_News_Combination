@@ -9,7 +9,7 @@ def insertRow(newsItem):
 
 		# Prepare SQL query to INSERT a record into the database.
 
-		sql ="INSERT INTO dbo.newsTestBBC(uniqueName,newsTitle,newsdate, newstime, source, origURL, description,category,author,picURL) VALUES (?,?,?,?,?,?,?,?,?,?)"
+		sql ="INSERT INTO dbo.newsTest(uniqueName,newsTitle,newsdate, newstime, source, origURL, description,category,author,picURL) VALUES (?,?,?,?,?,?,?,?,?,?)"
 
 		try:
 			# Execute the  SQL command

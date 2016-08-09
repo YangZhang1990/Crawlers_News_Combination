@@ -11,12 +11,6 @@ domain_name1 = get_domain_name(homepage1)
 #queue_file1 = project_name1+ '/'+project_name1+'_queue.txt'
 urlSpider1= urlSpider(project_name1,homepage1,domain_name1)
 
-project_name2 = 'bbc'
-homepage2 = 'http://www.bbc.com/news/world'
-domain_name2 = get_domain_name(homepage2)
-#queue_file1 = project_name1+ '/'+project_name1+'_queue.txt'
-urlSpider2= urlSpider(project_name2,homepage2,domain_name2)
-
 queue= Queue(maxsize=0)
 #create workder threads(will die when main exits)
 def create_workers(urlSpider):
@@ -49,5 +43,4 @@ def crawl(urlSpider):
 
 create_workers(urlSpider1)
 crawl(urlSpider1)
-create_workers(urlSpider2)
-crawl(urlSpider2)
+

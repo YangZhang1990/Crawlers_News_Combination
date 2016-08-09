@@ -3,45 +3,45 @@ from Queue import Queue
 from urlSpider import urlSpider
 from general import *
 
-
-PROJECT_NAME = 'bbc'
-HOMEPAGE = 'http://www.bbc.com/news/world'
-
-DOMAIN_NAME = get_domain_name(HOMEPAGE)
-QUEUE_FILE = PROJECT_NAME + '/'+PROJECT_NAME+'_queue.txt'
-#CRAWLED_FILE = PROJECT_NAME +'/crawled.txt'
 NUMBER_OF_THREADS = 6
 
-urlSpider(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME)
+
+
+project_name2 = 'bbc'
+homepage2 = 'http://www.bbc.com/news/world'
+domain_name2 = 'bbc.com/news'
+#queue_file1 = project_name1+ '/'+project_name1+'_queue.txt'
+urlSpider2= urlSpider(project_name2,homepage2,domain_name2)
+
 queue= Queue(maxsize=0)
 #create workder threads(will die when main exits)
-def create_workers():
+def create_workers(urlSpider):
 	for _ in range(NUMBER_OF_THREADS):
-		t = threading.Thread(target= work)
+		t = threading.Thread(target= work, args=(urlSpider,))
 		t.daemon= True
 		t.start()
 
 #do the next job in the queue
-def work():
+def work(urlSpider):
 	while True:
 		url= queue.get()
 		urlSpider.crawl_page_urls(threading.current_thread().name,url)
 		queue.task_done()
 
 #each queued link is a new job
-def create_jobs():
-	for link in file_to_set(QUEUE_FILE):
+def create_jobs(urlSpider):
+	for link in file_to_set(urlSpider.queue_file):
 		queue.put(link)
 	queue.join()
-	crawl()
+	crawl(urlSpider)
 
 #check if there are items in the queue, if so crawl them
-def crawl():
+def crawl(urlSpider):
 	queued_links = set()
-	queued_links = file_to_set(QUEUE_FILE)
+	queued_links = file_to_set(urlSpider.queue_file)
 	if len(queued_links)>0:
 		print(str(len(queued_links))+' links in the queue')
-		create_jobs()
+		create_jobs(urlSpider)
 
-create_workers()
-crawl()
+create_workers(urlSpider2)
+crawl(urlSpider2)
