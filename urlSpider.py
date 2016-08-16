@@ -46,7 +46,7 @@ class urlSpider:
 			if page_url not in urlSpider.crawled_url:
 				#print(thread_name+ ' now crawling '+page_url)
 				print('Queue: '+ str(len(urlSpider.queue)) + '| Crawled :'+str(len(urlSpider.crawled_item)))
-				if len(urlSpider.crawled_item)<=10000:
+				if len(urlSpider.crawled_item)<=5000:
                                         if urlSpider.project_name =='bbc':
                                                 urlSpider.add_links_to_queue_BBC(urlSpider.find_links(page_url))
                                         elif urlSpider.project_name=='fox':
@@ -97,6 +97,8 @@ class urlSpider:
 				continue
 			if urlSpider.domain_name not in url:
 				continue
+			if '?intcmp=trending' in url:
+                                continue
 			if 'bbc.com/autos' in url:
 				#print url
 				continue
@@ -145,6 +147,9 @@ class urlSpider:
 			if 'bbc.com/help' in url:
 				#print url
 				continue
+			if 'bbc.com/news/help' in url:
+                                #print url
+                                continue
 			if 'bbc.com/id' in url:
 				#print url
 				continue			
@@ -159,7 +164,14 @@ class urlSpider:
 				continue	
 			if 'bbc.com/modules' in url:
 				#print url
-				continue		
+				continue
+
+			if 'bbc.com/news/world-radio-and-tv' in url:
+                                continue
+                        if 'bbc.com/news/video_and_audio' in url:
+                                #print url
+                                continue
+
 			urlSpider.queue.add(url)
 	
 	@staticmethod	
@@ -224,10 +236,13 @@ class urlSpider:
                 #print 'author:'
                 #print author
                 source_name='BBC News'
+                sourceId = 1007
                 try:
                     source_name= soup.find('div',{'itemprop':'sourceOrganization'}).find('a').next
+                    sourceId = find_source_id(source_name)
                 except:
                     pass
+
                 #print source_name
                 origin_url=page_url
                 pic_url=''
@@ -253,6 +268,7 @@ class urlSpider:
                 #print pic_url
                 category_div=''
                 category=''
+                categoryId=12
                 try:
                     category_div=soup.find('div',{'class':'secondary-navigation secondary-navigation--wide'})
                 except:
@@ -286,7 +302,51 @@ class urlSpider:
                         pass
                 if category =='':
                     if 'sport' in page_url:
-                        category='sport'
+                        category='Sport'
+                        categoryId = 5
+                if 'England' in category:
+                    category='World'
+                    categoryId = 1
+                if 'Scotland' in category:
+                    category='World'
+                    categoryId = 1
+                if 'UK' in category:
+                    category='World'
+                    categoryId = 1
+                if 'Asia' in category:
+                    category='World'
+                    categoryId = 1
+                if 'Wales' in category:
+                    category='World'
+                    categoryId = 1
+                if 'Guernsey' in category:
+                    category='World'
+                    categoryId = 1
+                if 'Science & Environment' in category:
+                    category='Tech & Science'
+                    categoryId = 4
+                if 'Technology' in category:
+                    category='Tech & Science'
+                    categoryId = 4
+                if 'politics' in category:
+                    category='Politics'
+                    categoryId = 2
+                if 'EU Referendum' in category:
+                    category='Politics'
+                    categoryId = 2
+                if 'Disability' in category:
+                    category='Others'
+                    categoryId = 12
+                if 'The Reporters' in category:
+                    category='Others'
+                    categoryId = 12
+                if 'Magazine' in category:
+                    category='Entertainment & Arts'
+                    categoryId = 7
+                if 'Business' in category:
+                    categoryId = 8
+                if 'Education & Family' in category:
+                    categoryId = 13
                 #if category=='Rio 2016':
                 #   category='sports'
                 #print 'Category:'
@@ -326,8 +386,12 @@ class urlSpider:
                     pass
                 #print 'Description: '
                 #print description
-                news = newsItem(title,complete_title,time,date,source_name,description,origin_url,category,author,pic_url)
-                insertRow(news)
+                if title != "":
+                    news = newsItem(title,complete_title,time,date,sourceId,description,origin_url,categoryId,author,pic_url)
+                    insertRow(news)
+                else:
+                    return None
+
                 return news
         
         @staticmethod
@@ -375,6 +439,8 @@ class urlSpider:
                 if 'print' in url:
                         #print url
                         continue
+                if '?intcmp=trending' in url:
+                        continue
                 urlSpider.queue.add(url)
 
         @staticmethod
@@ -394,8 +460,10 @@ class urlSpider:
                         dateString=soup.find('time',{'itemprop':'datePublished'}).next.replace('\n','').replace(' ','')[9:]
                         #print dateString
                         source_name='Foxnews'
+                        sourceId =12
                         try:
                                 source_name= soup.find('div',{'itemprop':'sourceOrganization'}).find('a').next
+                                sourceId = find_source_id(source_name)
                         except:
                                 pass
                         #print source_name
@@ -417,39 +485,53 @@ class urlSpider:
                         #print pic_url
                         #print pic_info
                         #crawl category
+                        categoryId = 12
                         if 'foxnews.com/politics' in origin_url:
-                                category = 'politics'
+                                category = 'Politics'
+                                categoryId = 2
                         elif 'foxnews.com/us' in origin_url:
-                                category = 'us'
+                                category = 'US & Canada'
+                                categoryId = 3
                         elif 'foxnews.com/opinion' in origin_url:
-                                category='opinion'
+                                category='Opinion'
+                                categoryId = 6
                         elif 'foxnews.com/entertainment' in origin_url:
-                                category = 'entertainment'
+                                category = 'Entertainment & Arts'
+                                categoryId = 7
                         elif 'foxnews.com/tech' in origin_url:
-                                category='tech'
+                                category='Tech & Science'
+                                categoryId = 4
                         elif 'foxnews.com/science' in origin_url:
-                                category = 'science'
+                                category = 'Tech & Science'
+                                categoryId = 4
                         elif 'foxnews.com/health' in origin_url:
-                                category='health'
+                                category='Health'
+                                categoryId = 9
                         elif 'foxnews.com/travel' in origin_url:
-                                category ='travel'
+                                category ='LifeStyle'
+                                categoryId = 10
                         elif 'foxnews.com/world' in origin_url:
-                                category='world'
+                                category='World'
+                                categoryId = 1
                         elif 'foxnews.com/sports' in origin_url:
-                                category='sports'
+                                category='Sport'
+                                categoryId = 5
                         elif 'foxnews.com/leisure' in origin_url:
-                                category='lifestyle'
+                                category='Lifestyle'
+                                categoryId = 10
                         elif 'foxnews.com/weather' in origin_url:
-                                category='weather'
+                                category='Weather'
+                                categoryId = 11
                         else:
-                                category='others'
+                                category='Others'
+                                categoryId = 12
                         #print category
                         article_contents= soup.find('div',{'class':'article-text'}).find_all('p')
                         description=''
                         for paragraph in article_contents:
                                 description=description+paragraph.text.replace("'",'')+'\n'
                         #print description
-                        news = newsItem(title,complete_title,time,date,source_name,description,origin_url,category,author,pic_url)
+                        news = newsItem(title,complete_title,time,date,sourceId,description,origin_url,categoryId,author,pic_url)
                         insertRow(news)
                         return news
                 except:

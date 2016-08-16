@@ -4,19 +4,26 @@ from newsItem import *
 
 def insertRow(newsItem):
 	try:
-		conn = pyodbc.connect('DRIVER={SQL Server};SERVER=kapytest1.database.windows.net,1433', user='kapygroup', password='Kapykapy1234', database='databaseTest1')
+		conn = pyodbc.connect('DRIVER={SQL Server};SERVER=kapydatabase.database.windows.net,1433', user='kapygroup', password='Kapykapy1234', database='kapymvc1')
 		cursor=conn.cursor()
 
 		# Prepare SQL query to INSERT a record into the database.
-
-		sql ="INSERT INTO dbo.newsTest(uniqueName,newsTitle,newsdate, newstime, source, origURL, description,category,author,picURL) VALUES (?,?,?,?,?,?,?,?,?,?)"
+		'''
+		sql ="INSERT INTO dbo.Source(sourceName) VALUES (?)"
+		try:
+			cursor.execute(sql,(newsItem.source_name))
+			conn.commit()
+		except:
+			conn.rollback()
+		'''	
+		sql ="INSERT INTO dbo.News1(uniqueTitle,newsTitle,newsDate, newsTime, sourceId, origUrl, newsContent,categoryId,author,picUrl) VALUES (?,?,?,?,?,?,?,?,?,?)"
 
 		try:
 			# Execute the  SQL command
 			#print news.title
 			#print news.date
 			#print news.category
-			cursor.execute(sql,(newsItem.title,newsItem.complete_title,newsItem.date,newsItem.time,newsItem.source_name,newsItem.origin_url,newsItem.description,newsItem.category,newsItem.author,newsItem.pic_url))
+			cursor.execute(sql,(newsItem.title,newsItem.complete_title,newsItem.date,newsItem.time,newsItem.sourceId,newsItem.origin_url,newsItem.description,newsItem.categoryId,newsItem.author,newsItem.pic_url))
 			# Commit your changes in the database
 			conn.commit()
 			print 'success insert data'
@@ -30,3 +37,4 @@ def insertRow(newsItem):
 
 	except:
 		print "connection failed2"
+

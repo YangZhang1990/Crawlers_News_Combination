@@ -64,3 +64,40 @@ def get_sub_domain_name(url):
 		return urlparse(url).netloc
 	except:
 		return ''
+
+def find_source_id(sourceName):
+	if "Variety" in sourceName:
+		sourceId = 2
+	elif "FoxNews.com" in sourceName:
+		sourceId= 12
+	elif "Associated Press" in sourceName:
+		sourceId= 5
+	elif "Foxnews" in sourceName:
+		sourceId=12
+	elif "New York Post" in sourceName:
+		sourceId=22
+	elif "Newser" in sourceName:
+		sourceId=66	
+	elif "The Wall Street Journal" in sourceName:
+		sourceId= 100
+	elif "TVGuide" in sourceName:
+		sourceId= 187
+	elif "The Kim Komando Show" in sourceName:
+		sourceId=200
+	elif "BGR" in sourceName:
+		sourceId=209
+	elif "watchdog.org" in sourceName:
+		sourceId=12	
+	elif "Heat Street" in sourceName:
+		sourceId=498
+	elif "SkyNews" in sourceName:
+		sourceId=522	
+	elif "Deadline" in sourceName:
+		sourceId= 701
+	elif "BBC News" in sourceName:
+		sourceId= 1007
+	elif "Entrepreneur.com" in sourceName:
+		sourceId=12
+	else:
+		sourceId=12
+	return sourceId
