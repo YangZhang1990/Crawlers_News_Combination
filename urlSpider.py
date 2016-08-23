@@ -46,7 +46,7 @@ class urlSpider:
 			if page_url not in urlSpider.crawled_url:
 				#print(thread_name+ ' now crawling '+page_url)
 				print('Queue: '+ str(len(urlSpider.queue)) + '| Crawled :'+str(len(urlSpider.crawled_item)))
-				if len(urlSpider.crawled_item)<=5000:
+				if len(urlSpider.crawled_item)<=500:
                                         if urlSpider.project_name =='bbc':
                                                 urlSpider.add_links_to_queue_BBC(urlSpider.find_links(page_url))
                                         elif urlSpider.project_name=='fox':
@@ -532,6 +532,7 @@ class urlSpider:
                                 description=description+paragraph.text.replace("'",'')+'\n'
                         #print description
                         news = newsItem(title,complete_title,time,date,sourceId,description,origin_url,categoryId,author,pic_url)
+                        
                         insertRow(news)
                         return news
                 except:

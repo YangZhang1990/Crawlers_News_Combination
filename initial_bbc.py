@@ -1,4 +1,5 @@
 import threading
+import time
 from Queue import Queue
 from urlSpider import urlSpider
 from general import *
@@ -42,6 +43,13 @@ def crawl(urlSpider):
 	if len(queued_links)>0:
 		print(str(len(queued_links))+' links in the queue')
 		create_jobs(urlSpider)
+		
+def sleeptime(hour,min,sec):
+	return hour*3600 + min*60 + sec
 
-create_workers(urlSpider2)
-crawl(urlSpider2)
+second = sleeptime(0,0,10)
+while 1==1:
+	time.sleep(second)
+	print '================Start Crawling================='
+	create_workers(urlSpider2)
+	crawl(urlSpider2)

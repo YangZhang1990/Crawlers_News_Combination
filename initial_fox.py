@@ -2,6 +2,7 @@ import threading
 from Queue import Queue
 from urlSpider import urlSpider
 from general import *
+import time
 
 NUMBER_OF_THREADS = 6
 
@@ -41,6 +42,8 @@ def crawl(urlSpider):
 		print(str(len(queued_links))+' links in the queue')
 		create_jobs(urlSpider)
 
+
 create_workers(urlSpider1)
 crawl(urlSpider1)
+
 

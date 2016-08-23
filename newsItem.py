@@ -1,14 +1,14 @@
 class newsItem:
-    newsID=''
+    complete_title=''
     title=''
     time=''
     date=''
     description=''
-    sourceId=''
+    sourceId=0
     author=''
     pic_url=''
     origin_url=''
-    categoryId=''
+    categoryId=0
 
     def __init__(self, title,complete_title,time,date,sourceId,description,origin_url,categoryId,author,pic_url):
         self.title = title
