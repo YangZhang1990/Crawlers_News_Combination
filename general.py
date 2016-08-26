@@ -1,6 +1,10 @@
 import os
 import sys  
+import datetime
+import time
 from urlparse import urlparse
+import shutil
+
 reload(sys)  
 sys.setdefaultencoding('utf8')
 
@@ -101,3 +105,16 @@ def find_source_id(sourceName):
 	else:
 		sourceId=12
 	return sourceId
+
+def Time2ISOString( s ):
+    ''' 
+    convert second to a ISO format time
+    from: 23123123 to: 2006-04-12 16:46:40
+
+    '''
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime( float(s) ) ) 
+
+def deleteFolder(directory):
+	if os.path.exists(directory):
+		shutil.rmtree(directory)
+

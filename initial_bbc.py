@@ -4,9 +4,7 @@ from Queue import Queue
 from urlSpider import urlSpider
 from general import *
 
-NUMBER_OF_THREADS = 6
-
-
+NUMBER_OF_THREADS = 1
 
 project_name2 = 'bbc'
 homepage2 = 'http://www.bbc.com/news/world'
@@ -46,10 +44,14 @@ def crawl(urlSpider):
 		
 def sleeptime(hour,min,sec):
 	return hour*3600 + min*60 + sec
-
+'''
 second = sleeptime(0,0,10)
 while 1==1:
 	time.sleep(second)
 	print '================Start Crawling================='
 	create_workers(urlSpider2)
 	crawl(urlSpider2)
+'''
+
+create_workers(urlSpider2)
+crawl(urlSpider2)

@@ -46,7 +46,7 @@ class urlSpider:
 			if page_url not in urlSpider.crawled_url:
 				#print(thread_name+ ' now crawling '+page_url)
 				print('Queue: '+ str(len(urlSpider.queue)) + '| Crawled :'+str(len(urlSpider.crawled_item)))
-				if len(urlSpider.crawled_item)<=500:
+				if len(urlSpider.crawled_item)<=10:
                                         if urlSpider.project_name =='bbc':
                                                 urlSpider.add_links_to_queue_BBC(urlSpider.find_links(page_url))
                                         elif urlSpider.project_name=='fox':
@@ -63,6 +63,8 @@ class urlSpider:
 						print page_url
 					urlSpider.update_files()
 				else:
+					deleteDupicatetRows()
+					deleteFolder(urlSpider.project_name)
 					print 'finished__'+urlSpider.project_name
 					quit()
 
@@ -192,41 +194,27 @@ class urlSpider:
                 title= complete_title.replace(' ','').replace("'","").replace('!','').replace(':','')[:49]
                 #print 'title:   '
                 #print title
-            
-                timestamp=''
-                try:
-                    timestamp=soup.find('li',{'class':'mini-info-list__item'})                            
-                except:
-                    pass
-                #<p class="date date--v1" data-seconds="1470434601" data-timestamp-inserted="true"><strong>5 August 2016</strong> Last updated at 23:03 BST </p>
-                #print 'timestampe:  '
-                #print timestamp
                 date=''
-                try:
-                    date=timestamp.find('p',{'class':'date date--v1'}).next              
-                except:
-                    pass
-                try:
-                    date=timestamp.find('p',{'class':'date date--v1'}).find('strong').next                  
-                except:
-                    pass
-                try:
-                    date=timestamp.find('div',{'class':'date date--v2'}).next               
-                except:
-                    pass
-                try:
-                    date=soup.find('time').find('abbr')['title']  
-                except:
-                    pass 
-                try:
-                    date=soup.find('p',{'class':'date date--v1'}).find('strong').next   
-                except:
-                    pass
-            
-                #print 'Date: '
-                #print date
-                #time= timestamp['data-seconds'][11:19]
                 time=''
+                try:
+                    timestampdiv= soup.find('li',{'class':'mini-info-list__item'})
+                    timeseconds=timestampdiv.find('div',{'class':'date date--v2'})['data-seconds']
+                    timestamp =Time2ISOString(timeseconds)
+                    date = timestamp[:10]
+                    time = timestamp[11:]
+                except:
+                    pass
+                try:
+                    timestampdiv= soup.find('div',{'id':'media-asset-page-text'})
+                    #print timestampdiv
+                    timeseconds=timestampdiv.find('p',{'class':'date date--v1'})['data-seconds']
+                    #print timeseconds
+                    timestamp =Time2ISOString(timeseconds)
+                    date = timestamp[:10]
+                    time = timestamp[11:]
+                except:
+                    pass
+                #print date
                 #print time
                 author=''
                 try:
@@ -237,12 +225,13 @@ class urlSpider:
                 #print author
                 source_name='BBC News'
                 sourceId = 1007
+                '''
                 try:
                     source_name= soup.find('div',{'itemprop':'sourceOrganization'}).find('a').next
                     sourceId = find_source_id(source_name)
                 except:
                     pass
-
+                '''
                 #print source_name
                 origin_url=page_url
                 pic_url=''
@@ -263,7 +252,13 @@ class urlSpider:
                     pic_url=image['src']
                     #pic_info=soup.find('figcaption',{'class':'media-caption'})
                 except:
-                    pass   
+                    pass
+                try:
+                    image=soup.find('figure',{'class':'media-landscape has-caption full-width'}).find('div',{'class':'js-delayed-image-load'})
+                    pic_url=image['data-src']
+                except:
+                    pass                
+                #print image  
                 #print 'Pic url:'
                 #print pic_url
                 category_div=''
@@ -300,6 +295,8 @@ class urlSpider:
                         category=soup.find('span',{'class':'index-title__container'}).find('a').next
                     except:
                         pass
+                if category=='World':
+                    categoryId=1
                 if category =='':
                     if 'sport' in page_url:
                         category='Sport'
@@ -351,7 +348,7 @@ class urlSpider:
                 #   category='sports'
                 #print 'Category:'
                 #print category
-                
+                #print categoryId
                 #second_category = category_div.find('a',{'class':'navigation-wide-list__link navigation-wide-list__link--first navigation-wide-list__link--last"'}).find('span').next
                 #print second_category
                 
@@ -461,11 +458,13 @@ class urlSpider:
                         #print dateString
                         source_name='Foxnews'
                         sourceId =12
+                        '''
                         try:
                                 source_name= soup.find('div',{'itemprop':'sourceOrganization'}).find('a').next
                                 sourceId = find_source_id(source_name)
                         except:
                                 pass
+                        '''
                         #print source_name
                         author=''
                         try:
@@ -540,3 +539,7 @@ class urlSpider:
                         #print page_url
                         print('skip this page')
                         return None
+
+
+#urlSpider.find_PageItem_BBC('http://www.bbc.com/news/business-35667911')
+

@@ -4,7 +4,7 @@ from urlSpider import urlSpider
 from general import *
 import time
 
-NUMBER_OF_THREADS = 6
+NUMBER_OF_THREADS = 1
 
 project_name1 = 'fox'
 homepage1 = 'http://www.foxnews.com/'
@@ -45,5 +45,4 @@ def crawl(urlSpider):
 
 create_workers(urlSpider1)
 crawl(urlSpider1)
-
 
