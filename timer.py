@@ -1,7 +1,6 @@
 import datetime
 import time
-def sleeptime(hour,min,sec):
-	return hour*3600 + min*60 + sec
+
 '''
 second = sleeptime(0,0,10)
 while 1==1:
@@ -30,10 +29,11 @@ def Time2ISOString( s ):
     '''
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime( float(s) ) ) 
 
-
+'''
 a="2016-08-25 16:58:00"
 b=ISOString2Time(a)
 print b
 c=Time2ISOString(1472155212)
 print c
 
+'''

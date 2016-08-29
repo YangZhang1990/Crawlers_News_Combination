@@ -1,6 +1,6 @@
 import urllib
 import urllib2
-import sys
+import os
 from general import *
 import requests
 from bs4 import BeautifulSoup
@@ -46,7 +46,7 @@ class urlSpider:
 			if page_url not in urlSpider.crawled_url:
 				#print(thread_name+ ' now crawling '+page_url)
 				print('Queue: '+ str(len(urlSpider.queue)) + '| Crawled :'+str(len(urlSpider.crawled_item)))
-				if len(urlSpider.crawled_item)<=10:
+				if len(urlSpider.crawled_item)<=500:
                                         if urlSpider.project_name =='bbc':
                                                 urlSpider.add_links_to_queue_BBC(urlSpider.find_links(page_url))
                                         elif urlSpider.project_name=='fox':
@@ -66,7 +66,7 @@ class urlSpider:
 					deleteDupicatetRows()
 					deleteFolder(urlSpider.project_name)
 					print 'finished__'+urlSpider.project_name
-					quit()
+					os._exit(-1)
 
 	@staticmethod
 	def find_links(base_url):
