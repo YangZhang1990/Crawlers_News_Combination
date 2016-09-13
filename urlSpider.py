@@ -8,7 +8,6 @@ from urlparse import urljoin
 from dataconnet import *
 from newsItem import *
 
-
 class urlSpider:
 	# Class variables shared among all instances
 	#project_name =''
@@ -41,12 +40,11 @@ class urlSpider:
 		urlSpider.crawled_item = file_to_set(urlSpider.crawled_item_file)
 
 	@staticmethod
-	def crawl_page_urls(thread_name, page_url):
-		
+	def crawl_page_urls(thread_name, page_url):		
 			if page_url not in urlSpider.crawled_url:
 				#print(thread_name+ ' now crawling '+page_url)
 				print('Queue: '+ str(len(urlSpider.queue)) + '| Crawled :'+str(len(urlSpider.crawled_item)))
-				if len(urlSpider.crawled_item)<=500:
+				if len(urlSpider.crawled_item)<=100:
                                         if urlSpider.project_name =='bbc':
                                                 urlSpider.add_links_to_queue_BBC(urlSpider.find_links(page_url))
                                         elif urlSpider.project_name=='fox':
@@ -77,12 +75,12 @@ class urlSpider:
 			links=set()
 			for link in original_links:
 				full_url = urljoin(base_url,link.get('href'))
-				#print full_url
 				links.add(full_url)
 		except:
 			print('Error: can not crawl page')
 			return set()
 		return links
+
 	@staticmethod
 	def update_files():
 		set_to_file(urlSpider.queue,urlSpider.queue_file)
@@ -194,6 +192,7 @@ class urlSpider:
                 title= complete_title.replace(' ','').replace("'","").replace('!','').replace(':','')[:49]
                 #print 'title:   '
                 #print title
+                
                 date=''
                 time=''
                 try:
@@ -204,6 +203,7 @@ class urlSpider:
                     time = timestamp[11:]
                 except:
                     pass
+                
                 try:
                     timestampdiv= soup.find('div',{'id':'media-asset-page-text'})
                     #print timestampdiv
@@ -395,37 +395,26 @@ class urlSpider:
         def add_links_to_queue_fox(links):
             for url in links:
                 if url in urlSpider.queue:
-                        #print url
                         continue
                 if url in urlSpider.crawled_url:
-                        #print url
                         continue
                 if urlSpider.domain_name not in url:
-                        #print url
                         continue
                 if 'shop.foxnews' in url:
-                        #print url
                         continue
                 if 'live.foxnews' in url:
-                        #print url
                         continue
                 if 'careers.foxnews' in url:
-                        #print url
                         continue
                 if 'radio.foxnews' in url:
-                        #print url
                         continue
                 if 'help' in url:
-                        #print url
                         continue
                 if 'video.foxnews' in url:
-                        #print url
                         continue
                 if 'video.latino' in url:
-                        #print url
                         continue
                 if 'latino.foxnews' in url:
-                        #print url
                         continue
                 if 'nation.foxnews' in url:
                         #print url
@@ -447,15 +436,11 @@ class urlSpider:
                         soup = BeautifulSoup(r.content,'lxml')
                         complete_title = soup.find('h1',{'itemprop':'headline'}).next
                         title= complete_title.replace(' ','').replace("'","").replace('!','').replace(':','')[:49]
-                        #print title
                         timestamp=soup.find('time')
                         if timestamp.has_attr('datetime'):
                                 date= timestamp['datetime'][:10]
-                                #print date
                                 time= timestamp['datetime'][11:19]
-                                #print time
                         dateString=soup.find('time',{'itemprop':'datePublished'}).next.replace('\n','').replace(' ','')[9:]
-                        #print dateString
                         source_name='Foxnews'
                         sourceId =12
                         '''
@@ -465,7 +450,6 @@ class urlSpider:
                         except:
                                 pass
                         '''
-                        #print source_name
                         author=''
                         try:
                                 author=soup.find('div',{'class':'article-info'}).find('span',{'itemprop':'name'}).next.replace('\n','').lstrip().rstrip()

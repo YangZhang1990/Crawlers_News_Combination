@@ -9,7 +9,9 @@ second = sleeptime(1,0,0)
 while 1==1:
 	print 'start'
 	print datetime.datetime.now()
+	print 'start crawl fox'
 	os.system('initial_fox.py')
+	print 'start crawl bbc'
 	os.system('initial_bbc.py')
 	time.sleep(second)
 	

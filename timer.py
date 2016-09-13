@@ -10,8 +10,6 @@ while 1==1:
 #!/usr/bin/env python
 # -*- coding: cp936 -*-
 
-
-
 def ISOString2Time( s ):
     ''' 
     convert a ISO format time to second
