@@ -7,7 +7,7 @@ def getUsers():
       try:
             conn = pyodbc.connect('DRIVER={SQL Server};SERVER=kapydatabase.database.windows.net,1433', user='kapygroup', password='Kapykapy1234', database='kapymvc1')
             cursor=conn.cursor()
-            sql1 ="SELECT Id, Email FROM dbo.AspNetUsers WHERE emailConfirmed =1"
+            sql1 ="SELECT Id, Email FROM dbo.AspNetUsers WHERE isNotified=1"
             try:
                   users=[]
                   cursor.execute(sql1)
@@ -25,7 +25,7 @@ def getUsers():
             print "connection failed"      
 def sendEmail(user):
       SUBJECT = "Everyday News From KAPY!"
-      TEXT = "This is a test for notification\n\n"+getNewsForUser(user.user_id)
+      TEXT = "Kapy's news notification\n\n"+getNewsForUser(user.user_id)
       message = 'Subject: %s\n\n%s' % (SUBJECT, TEXT)
       message=message.encode("utf-8")
       mail = smtplib.SMTP('smtp.gmail.com',587)
@@ -40,7 +40,7 @@ def getNewsForUser(user_Id):
             conn = pyodbc.connect('DRIVER={SQL Server};SERVER=kapydatabase.database.windows.net,1433', user='kapygroup', password='Kapykapy1234', database='kapymvc1')
             cursor=conn.cursor()
             try:
-                  url = "https://kapynewstest1.azurewebsites.net/News1/Details/"
+                  url = "https://kapysnews.azurewebsites.net/News1/Details/"
                   newscontent="Recommend News in "+str(datetime.date.today())+" to you\n\n"
                   cursor.execute("""
                         SELECT souceId FROM dbo.AspNetUser_Source WHERE UserId = ?
@@ -50,7 +50,7 @@ def getNewsForUser(user_Id):
                   for row in cursor.fetchall():
                         ids=ids+row[0]            
                   if ids==0:
-                        print "aaa"
+                        #print "aaa"
                         cursor.execute("""SELECT top 10 newsTitle, newsId,newsTime FROM dbo.News1
                               WHERE categoryId in(SELECT categoryId FROM dbo.AspNetUser_Category WHERE userId = ?)
                               AND newsDate = ?
@@ -72,7 +72,7 @@ def getNewsForUser(user_Id):
                         print row[2]
                   print 'success get news'
                   if newsList =="":
-                        newscontent="Select news in categories and sources you're interested in and receive our notifications for you!\nhttps://kapynewstest1.azurewebsites.net"
+                        newscontent="Select news in categories and sources you're interested in and receive our notifications for you!\nhttps://kapysnews.azurewebsites.net"
                   else:
                         newscontent=newscontent
                   return newscontent
